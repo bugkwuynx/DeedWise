@@ -1,0 +1,142 @@
+.signupContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-self: center;
+    justify-self: center;
+    color: var(--text-color);
+    margin: 70px;
+    padding: 10px;
+    width: 80%;
+    height: 600px;
+    box-shadow: 0 0 20px 0 rgba(255, 255, 255, 0.5);
+    background-color: black;
+}
+
+.imageContainer {
+    height: 100%;
+    width: 60%;
+    overflow: hidden;
+    position: relative;
+}
+
+.backgroundImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.signupForm {
+    width: 40%;
+    padding: 10px;
+}
+
+.signupTitle {
+    font-size: 30px;
+    font-weight: 800;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.signupDescription {
+    font-size: 14px;
+    font-weight: 300;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.loginLink {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 5px;
+}
+
+.inputContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.inputOuterContainer {
+    width: 70%;
+    margin-bottom: 15px;
+}
+
+.input {
+    width: 100%;
+    box-sizing: border-box;
+    border: none;
+    border-bottom: 0.5px solid var(--text-color);
+    background-color: black;
+    color: var(--text-color);
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.forgotPasswordContainer {
+    width: 60%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.forgotPasswordLink {
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    text-align: right;
+}
+
+.forgotPasswordLink:hover {
+    text-decoration: underline;
+}
+
+.signupButtonContainer {
+    width: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.signupButton {
+    width: 100%;
+    height: 30px;
+    padding: 20px;
+    border: none;
+    background-color: black;
+    color: var(--text-color);
+    font-size: 18px;
+    font-weight: 550;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin-top: 20px;
+    box-shadow: 0 0 20px 0 rgba(255, 255, 255, 0.5);
+}
+
+.signupButton:hover {
+    transform: scale(1.02);
+    transition: all 0.3s ease;
+    background-color: var(--text-color);
+    color: black;
+}
+
+.signupButtonOuterContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.nameInputContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 70%;
+    gap: 30px;
+}

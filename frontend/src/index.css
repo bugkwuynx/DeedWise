@@ -1,0 +1,18 @@
+:root {
+  font-family: Inter, sans-serif;
+  font-feature-settings: 'liga' 1, 'calt' 1; /* fix for Chrome */
+  
+  background-color: #000000;
+
+  --box-color: #4b4b4b;
+  --text-color: #ffffff;
+}
+
+body {
+  padding: 30px;         /* adjust as needed */
+  margin: 0;
+  box-sizing: border-box;
+  font-family: 'Noto Sans';
+}
+
+
