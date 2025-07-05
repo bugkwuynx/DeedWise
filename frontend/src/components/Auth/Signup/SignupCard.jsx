@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "./SignupCard.module.css";
-import propertySignup from "../../../assets/propertySignup.jpg";
+import propertySignup from "../../../assets/propertySignup.JPG";
 import { Link } from "react-router-dom";
 
 const SignupCard = () => {
