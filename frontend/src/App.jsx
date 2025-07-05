@@ -10,6 +10,7 @@ import {
   SellerSmartContractStage1,
   SellerSmartContractStage2
 } from "./pages/SmartContract";
+import { ContractDetailPageBuyer, ContractDetailPageSeller } from "./pages/ContractDetail";
 
 
 function App() {
@@ -25,6 +26,8 @@ function App() {
         <Route path="/smart-contract/buyer/stage-2" element={<BuyerSmartContractStage2 />} />
         <Route path="/smart-contract/seller/stage-1" element={<SellerSmartContractStage1 />} />
         <Route path="/smart-contract/seller/stage-2" element={<SellerSmartContractStage2 />} />
+        <Route path="/contract/buyer/:id" element={<ContractDetailPageBuyer />} />
+        <Route path="/contract/seller/:id" element={<ContractDetailPageSeller />} />
       </Routes>
     </Router>
   )
