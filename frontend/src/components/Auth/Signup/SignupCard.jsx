@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "./SignupCard.module.css";
-import propertySignup from "../../../assets/propertySignup.JPG";
+import signup from "../../../assets/signup.jpg";
 import { Link } from "react-router-dom";
 
 const SignupCard = () => {
@@ -66,7 +66,7 @@ const SignupCard = () => {
             </div>
             <div className={styles.imageContainer}>
                 <img
-                    src={propertySignup}
+                    src={signup}
                     alt="propertySignup"
                     className={styles.backgroundImage}
                 />

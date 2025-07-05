@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "./LoginCard.module.css";
-import propertyLogin from "../../../assets/propertyLogin.JPG";
+import propertyLogin from "../../../assets/login.jpg";
 import { Link } from "react-router-dom";
 
 const LoginCard = () => {
