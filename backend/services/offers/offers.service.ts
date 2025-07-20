@@ -110,9 +110,7 @@ export const updateOffer = async (
     `;
 
     const values = [ ...Object.values( updatedOffer ), id ];
-
-    console.log( query, values );
-
+    
     const result = await sql.query( query, values );
 
     if ( result && result.length === 0 ) {
