@@ -1,4 +1,5 @@
 import { QueryOptions, QueryResult, UpdateQueryOptions } from "./queryOptions.types";
+import { camelToSnake } from "../utils/camelToSnakeCase";
 
 export const buildSelectQuery = ( options: QueryOptions ): QueryResult => {
     const { where = {}, orderBy, limit, offset } = options;
@@ -12,7 +13,7 @@ export const buildSelectQuery = ( options: QueryOptions ): QueryResult => {
      */
     for ( const [ key, value ] of Object.entries( where ) ) {
         if ( value !== undefined ) {
-            query += ` AND ${ key } = $${ index }`;
+            query += ` AND ${ camelToSnake( key ) } = $${ index }`;
             values.push( value );
             index++;
         }
@@ -50,7 +51,7 @@ export const buildUpdateQuery = ( options: UpdateQueryOptions ): string => {
 
     for ( const [ key, value ] of Object.entries( options ) ) {
         if ( value !== undefined ) {
-            query += `${ key } = $${ index++ },`;
+            query += `${ camelToSnake( key ) } = $${ index++ },`;
         }
     }
     
