@@ -11,6 +11,7 @@ import authRouter from "./routes/auth/auth.router";
 import propertiesRouter from "./routes/properties/properties.router";
 import offersRouter from "./routes/offers/offers.router";
 import usersRouter from "./routes/users/users.router";
+import transactionsRouter from "./routes/transactions/transactions.router";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -49,6 +50,7 @@ app.use( "/auth", authRouter );
 app.use( "/properties", authenticateJWT, propertiesRouter );
 app.use( "/offers", authenticateJWT, offersRouter );
 app.use( "/users", authenticateJWT, usersRouter );
+app.use( "/transactions", authenticateJWT, transactionsRouter );
 
 app.get( "/protected", authenticateJWT, ( req: Request, res: Response ) => {
     res.send('This is a protected route');
