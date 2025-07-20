@@ -2,7 +2,7 @@ import { Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { createUser, getUserByUserName } from "../../services/users/users.service";
-import { RegisterRequest, LoginRequest, User, LoginResponse } from "../../types/users.type";
+import { RegisterRequest, LoginRequest, User, LoginResponse } from "../../types/users.types";
 
 export const register = async ( req: RegisterRequest, res: Response<User | { message: string }> ) => {
     try {
@@ -42,7 +42,7 @@ export const register = async ( req: RegisterRequest, res: Response<User | { mes
     }
 };
 
-export const login = async ( req: LoginRequest, res: Response<LoginResponse | { message: string }> ) => {
+export const login = async ( req: LoginRequest, res: Response<LoginResponse | null | { message: string }> ) => {
     try {
         const { userName, password } = req.body;
 
@@ -53,7 +53,7 @@ export const login = async ( req: LoginRequest, res: Response<LoginResponse | { 
         const user: User | null = await getUserByUserName( userName );
 
         if ( !user ) {
-            return res.status( 401 ).json( { message: "Invalid credentials" } );
+            return null;
         }
 
         if ( !user.passwordHash ) {

@@ -1,4 +1,4 @@
-import { NewUser, User } from "../../types/users.type";
+import { NewUser, User } from "../../types/users.types";
 import { neon } from "@neondatabase/serverless";
 
 const sql = neon( process.env.DATABASE_URL! );
