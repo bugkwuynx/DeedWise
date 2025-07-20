@@ -60,7 +60,7 @@ export const getPropertyByIdHandler = async (
 
 export const getPropertiesHandler = async (
     req: GetPropertiesRequest,
-    res: Response<Property[] | { message: string }>
+    res: Response<Property[] | null | { message: string }>
 ) => {
     try {
         const queryOptions = req.query;
@@ -68,10 +68,6 @@ export const getPropertiesHandler = async (
         const properties = await getProperties( {
             where: queryOptions
         } );
-
-        if ( !properties ) {
-            return res.status( 404 ).json( { message: "Properties not found" } );
-        }
 
         res.status( 200 ).json( properties );
     }

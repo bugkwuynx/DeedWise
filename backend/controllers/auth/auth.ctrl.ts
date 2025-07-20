@@ -1,8 +1,16 @@
 import { Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { createUser, getUserByUserName } from "../../services/users/users.service";
-import { RegisterRequest, LoginRequest, User, LoginResponse } from "../../types/users.types";
+import {
+    createUser, getUserByUserName, getUsers
+} from "../../services/users/users.service";
+import {
+    RegisterRequest,
+    LoginRequest,
+    User,
+    LoginResponse,
+    GetUsersRequest
+} from "../../types/users.types";
 
 export const register = async ( req: RegisterRequest, res: Response<User | { message: string }> ) => {
     try {
@@ -73,3 +81,20 @@ export const login = async ( req: LoginRequest, res: Response<LoginResponse | nu
         res.status( 500 ).json( { message: `Internal server error: ${ error }` } );
     }
 };
+
+export const getUsersHandler = async (
+    req: GetUsersRequest,
+    res: Response<User[] | null | { message: string }>
+) => {
+    try {
+        const queryOptions = req.query;
+
+        const users = await getUsers( {
+            where: queryOptions
+        } );
+
+        res.status( 200 ).json( users );
+    } catch ( error ) {
+        res.status( 500 ).json( { message: `Internal server error: ${ error }` } );
+    }
+}

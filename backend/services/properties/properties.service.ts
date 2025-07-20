@@ -95,7 +95,10 @@ export const getPropertyById = async (id: string ): Promise<Property | null> => 
     return result[0] as Property;
 }
 
-export const updateProperty = async ( id: string, updatedProperty: Partial<NewProperty> ): Promise<Property | null> => {
+export const updateProperty = async (
+    id: string,
+    updatedProperty: Partial<NewProperty>
+): Promise<Property | null> => {
     const query = `
         UPDATE properties
         ${ buildUpdateQuery( updatedProperty as UpdateQueryOptions  ) }
@@ -128,7 +131,9 @@ export const updateProperty = async ( id: string, updatedProperty: Partial<NewPr
     return result[0] as Property;
 };
 
-export const getProperties = async ( queryOptions: QueryOptions ): Promise<Property[] | null> => {
+export const getProperties = async (
+    queryOptions: QueryOptions
+): Promise<Property[] | null> => {
     const { queryClause, values } = buildSelectQuery( queryOptions );
 
     const query = `

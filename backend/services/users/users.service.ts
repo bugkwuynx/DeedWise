@@ -1,5 +1,7 @@
 import { NewUser, User } from "../../types/users.types";
 import { neon } from "@neondatabase/serverless";
+import { QueryOptions } from "../../database/queryOptions.types";
+import { buildSelectQuery } from "../../database/queryBuilder";
 
 const sql = neon( process.env.DATABASE_URL! );
 
@@ -53,7 +55,6 @@ export const getUserByUserName = async ( userName: User[ "userName" ] ): Promise
             last_name AS "lastName",
             user_name AS "userName",
             email AS "email",
-            password_hash AS "passwordHash",
             created_at AS "createdAt",
             updated_at AS "updatedAt"
         FROM users
@@ -69,3 +70,26 @@ export const getUserByUserName = async ( userName: User[ "userName" ] ): Promise
 
     return result[ 0 ] as User;
 };
+
+export const getUsers = async(
+    queryOptions: QueryOptions
+): Promise<User[] | null> => {
+    const { queryClause, values } = buildSelectQuery( queryOptions );
+
+    const query = `
+        SELECT
+            id,
+            wallet_address AS "walletAddress",
+            first_name AS "firstName",
+            last_name AS "lastName",
+            user_name AS "userName",
+            email AS "email",
+            created_at AS "createdAt",
+            updated_at AS "updatedAt"
+        FROM users ${ queryClause }
+    `;
+
+    const getUsersResult = await sql.query( query, values );
+
+    return getUsersResult as unknown as User[];
+}

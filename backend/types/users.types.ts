@@ -37,3 +37,13 @@ export interface LoginResponse {
     userId: User[ "id" ];
     token: string;
 }
+
+export interface GetUsersRequest extends Request {
+    query: {
+        walletAddress?: string;
+        firstName?: string;
+        lastName?: string;
+        userName?: string;
+        email?: string;
+    }
+}

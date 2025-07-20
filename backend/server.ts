@@ -43,8 +43,8 @@ app.get( "/", async ( req: IncomingMessage, res: ServerResponse ) => {
     res.end( version.toString() );
 });
 
-app.use( "/auth", authRouter );
-app.use( "/properties", propertiesRouter );
+app.use( "/auth", authenticateJWT, authRouter );
+app.use( "/properties", authenticateJWT, propertiesRouter );
 
 app.get( "/protected", authenticateJWT, ( req: Request, res: Response ) => {
     res.send('This is a protected route');
