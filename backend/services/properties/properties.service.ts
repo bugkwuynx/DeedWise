@@ -36,6 +36,7 @@ export const createProperty = async (
             zip_code as "zipCode",
             property_type as "propertyType",
             year_built as "yearBuilt",
+            token_address as "tokenAddress",
             created_at as "createdAt",
             updated_at as "updatedAt"
     `;
@@ -78,6 +79,7 @@ export const getPropertyById = async (id: string ): Promise<Property | null> => 
             zip_code as "zipCode",
             property_type as "propertyType",
             year_built as "yearBuilt",
+            token_address as "tokenAddress",
             created_at as "createdAt",
             updated_at as "updatedAt"
         FROM properties
@@ -116,6 +118,7 @@ export const updateProperty = async (
             zip_code as "zipCode",
             property_type as "propertyType",
             year_built as "yearBuilt",
+            token_address as "tokenAddress",
             created_at as "createdAt",
             updated_at as "updatedAt"
     `;
@@ -150,6 +153,7 @@ export const getProperties = async (
             zip_code as "zipCode",
             property_type as "propertyType",
             year_built as "yearBuilt",
+            token_address as "tokenAddress",
             created_at as "createdAt",
             updated_at as "updatedAt"            
         FROM properties ${ queryClause }

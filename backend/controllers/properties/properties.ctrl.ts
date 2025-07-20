@@ -12,6 +12,7 @@ import {
     getProperties,
     updateProperty
 } from "../../services/properties/properties.service";
+import { createAndMintToken } from "../createToken.ctrl";
 
 export const createPropertyHandler = async (
     req: CreatePropertyRequest,
@@ -25,7 +26,18 @@ export const createPropertyHandler = async (
         }
         
         const property = await createProperty( newProperty );
-        res.status( 201 ).json( property );
+
+        const token = await createAndMintToken( property.id );
+
+        const propertyWithToken = await updateProperty( property.id, {
+            tokenAddress: token.mintAddress
+        } );
+
+        if ( !propertyWithToken ) {
+            return res.status( 500 ).json( { message: "Failed to create and mint token" } );
+        }
+
+        res.status( 201 ).json( propertyWithToken );
     }
     catch ( error ) {
         console.error( error );
