@@ -23,5 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 
-
+my-wallet-file.json
 .env

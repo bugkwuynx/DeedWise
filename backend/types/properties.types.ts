@@ -3,6 +3,7 @@ import { Request } from "express";
 
 export interface Property {
     id: string;
+    tokenAddress: string;
     createdAt: Date;
     updatedAt: Date;
 }
