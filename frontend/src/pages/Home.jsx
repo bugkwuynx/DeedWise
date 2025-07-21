@@ -1,22 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
 import HeroSection from "../components/common/HeroSection/HeroSection";
 import NavBar from "../components/common/NavBar/NavBar";
 import Dashboard from "../components/Dashboard/Dashboard";
+import { AuthContext } from "../components/Auth/AuthContext";
 
 const Home = () => {
 
-  const [ isLoggedIn, setIsLoggedIn ] = useState(true);
+  const { token, loading } = useContext( AuthContext );
 
-  // useEffect( () => {
-  //   const token = localStorage.getItem("token");
-  //   setIsLoggedIn(!!token);
-  // }, [] );
+  if ( loading ) {
+    return null;
+  }
+
+  if ( !token ) {
+    return (
+      <div>
+        <NavBar />
+        <HeroSection />
+      </div>
+    );
+  }
 
   return (
     <div>
       <NavBar />
-      { console.log(isLoggedIn) }
-      { isLoggedIn ? <Dashboard /> : <HeroSection /> }
+      <Dashboard />
     </div>
   );
 };

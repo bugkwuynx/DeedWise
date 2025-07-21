@@ -55,6 +55,7 @@ export const getUserByUserName = async ( userName: User[ "userName" ] ): Promise
             last_name AS "lastName",
             user_name AS "userName",
             email AS "email",
+            password_hash AS "passwordHash",
             created_at AS "createdAt",
             updated_at AS "updatedAt"
         FROM users
@@ -84,6 +85,7 @@ export const getUsers = async(
             last_name AS "lastName",
             user_name AS "userName",
             email AS "email",
+            password_hash AS "passwordHash",
             created_at AS "createdAt",
             updated_at AS "updatedAt"
         FROM users ${ queryClause }

@@ -1,11 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import styles from "./LoginCard.module.css";
 import propertyLogin from "../../../assets/login.jpg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../AuthContext";
 
 const LoginCard = () => {
-    const [email, setEmail] = useState("");
+    const navigate = useNavigate();
+
+    const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
+    const { setToken } = useContext( AuthContext );
+
+    const handleLogin = async () => {
+        if ( !userName || !password ) {
+            alert("Please fill in all fields");
+            return;
+        }
+
+        const user = {
+            userName,
+            password
+        };
+
+        const response = await fetch( `${ import.meta.env.VITE_API_URL }/auth/login`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify( user )
+        } );
+
+        if ( response.ok ) {
+            alert("Login successful");
+            setToken( response.token );
+            localStorage.setItem( "token", response.token );
+            window.location.href = "/";
+        } else {
+            alert("Failed to login");
+        }
+    }
 
     return (
         <div className={styles.loginContainer}>
@@ -30,9 +63,9 @@ const LoginCard = () => {
                     <div className={styles.inputOuterContainer}>
                         <input
                             type="text"
-                            placeholder="Email"
+                            placeholder="User Name"
                             className={styles.input}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e) => setUserName(e.target.value)}
                         />
                     </div>
                     <div className={styles.inputOuterContainer}>
@@ -51,7 +84,12 @@ const LoginCard = () => {
                 </div>
                 <div className={styles.loginButtonOuterContainer}>
                     <div className={styles.loginButtonContainer}>
-                        <button className={styles.loginButton}>Login</button>
+                        <button
+                            className={styles.loginButton}
+                            onClick={handleLogin}
+                        >
+                            Login
+                        </button>
                     </div>
                 </div>
             </div>

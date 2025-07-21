@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import styles from "./NavBar.module.css"
+import { AuthContext } from "../../Auth/AuthContext";
 
 const NavBar = () => {
 
-  const [ isLoggedIn, setIsLoggedIn ] = useState(false);
+  const { token, loading, setToken } = useContext( AuthContext );
 
-  useEffect( () => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
-  }, [] );
+  if ( loading ) {
+    return null;
+  }
+
+  const isLoggedIn = !!token;
 
   return (
     <div className={styles.navContainer}>
@@ -43,7 +45,7 @@ const NavBar = () => {
             Account
           </NavLink>
         </div>
-        { isLoggedIn ? (
+        { !isLoggedIn ? (
             <div>
               <button
                 className={styles.authNav}
@@ -69,6 +71,7 @@ const NavBar = () => {
                 onClick={() => {
                   localStorage.removeItem("token");
                   window.location.href = "/";
+                  setToken( null );
                 }}
               >
                 Logout

@@ -2,13 +2,49 @@ import React, { useState } from "react";
 import styles from "./SignupCard.module.css";
 import signup from "../../../assets/signup.jpg";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const SignupCard = () => {
+
+    const navigate = useNavigate();
 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [walletAddress, setWalletAddress] = useState("");
+    const [userName, setUserName] = useState("");
+
+    const handleSignup = async () => {
+        if ( !firstName || !lastName || !email || !password || !walletAddress || !userName ) {
+            alert("Please fill in all fields");
+            return;
+        }
+
+        const newUser = {
+            walletAddress,
+            firstName,
+            lastName,
+            userName,
+            email,
+            password
+        };
+
+        const response = await fetch( `${ import.meta.env.VITE_API_URL }/auth/register`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify( newUser )
+        } );
+
+        if ( response.ok ) {
+            alert("User created successfully");
+            navigate("/login");
+        } else {
+            alert("Failed to create user");
+        }
+    }
 
     return (
         <div className={styles.signupContainer}>
@@ -44,6 +80,22 @@ const SignupCard = () => {
                     <div className={styles.inputOuterContainer}>
                         <input
                             type="text"
+                            placeholder="Wallet Address"
+                            className={styles.input}
+                            onChange={(e) => setWalletAddress(e.target.value)}
+                        />
+                    </div>
+                    <div className={styles.inputOuterContainer}>
+                        <input
+                            type="text" 
+                            placeholder="User Name"
+                            className={styles.input}
+                            onChange={(e) => setUserName(e.target.value)}
+                        />
+                    </div>
+                    <div className={styles.inputOuterContainer}>
+                        <input
+                            type="text"
                             placeholder="Email"
                             className={styles.input}
                             onChange={(e) => setEmail(e.target.value)}
@@ -60,7 +112,12 @@ const SignupCard = () => {
                 </div>
                 <div className={styles.signupButtonOuterContainer}>
                     <div className={styles.signupButtonContainer}>
-                        <button className={styles.signupButton}>Create Account</button>
+                        <button
+                            className={styles.signupButton}
+                            onClick={handleSignup}
+                        >
+                            Create Account
+                        </button>
                     </div>
                 </div>
             </div>
