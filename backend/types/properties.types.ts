@@ -1,14 +1,14 @@
 import { User } from "./users.types";
 import { Request } from "express";
 
-export interface Property {
+export interface Property extends NewProperty {
     id: string;
-    tokenAddress: string;
+    tokenAddress: string | null;
     createdAt: Date;
     updatedAt: Date;
 }
 
-export interface NewProperty extends Property {
+export interface NewProperty {
     ownerId: User[ "id" ];
     isListed: boolean;
     beds: number;
@@ -20,6 +20,12 @@ export interface NewProperty extends Property {
     zipCode: string;
     propertyType: string;
     yearBuilt: number;
+    price: number;
+}
+
+export interface DisplayProperty {
+    property: Property;
+    owner: User;
 }
 
 export interface CreatePropertyRequest extends Request {
@@ -44,6 +50,7 @@ export interface GetPropertiesRequest extends Request {
         zipCode?: string;
         propertyType?: string;
         yearBuilt?: string;
+        price?: string;
     }
 }
 
