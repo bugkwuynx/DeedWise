@@ -23,7 +23,7 @@ const LoginCard = () => {
             password
         };
 
-        const userLoginResponse: Response = await fetch( `${ process.env.REACT_APP_API_URL }/auth/login`, {
+        const userLoginResponse: Response = await fetch( `${ import.meta.env.VITE_API_URL }/auth/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

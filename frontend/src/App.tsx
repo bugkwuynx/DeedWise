@@ -5,6 +5,7 @@ import NavBar from "./components/common/NavBar";
 import LoginPage from "./pages/Login";
 import SignupPage from "./pages/Signup";
 import PostPropertyPage from "./pages/PostProperty";
+import DisplayPropertyPage from "./pages/DisplayProperty";
 import { SolanaProvider } from "./components/common/SolanaProvider";
 
 // import {
@@ -28,6 +29,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/sign-up" element={<SignupPage />} />
             <Route path="/post-property" element={<PostPropertyPage />} />
+            <Route path="/property/:id" element={<DisplayPropertyPage />} />
             {/* <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/smart-contract" element={<SmartContract />} />

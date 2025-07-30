@@ -20,9 +20,10 @@ export const createProperty = async (
             state,
             zip_code,
             property_type,
-            year_built
+            year_built,
+            price
         )
-        VALUES ( $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11 )
+        VALUES ( $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12 )
         RETURNING
             id,
             owner_id as "ownerId",
@@ -37,6 +38,7 @@ export const createProperty = async (
             property_type as "propertyType",
             year_built as "yearBuilt",
             token_address as "tokenAddress",
+            price as "price",
             created_at as "createdAt",
             updated_at as "updatedAt"
     `;
@@ -52,7 +54,8 @@ export const createProperty = async (
         newProperty.state,
         newProperty.zipCode,
         newProperty.propertyType,
-        newProperty.yearBuilt
+        newProperty.yearBuilt,
+        newProperty.price
     ];
 
     const result = await sql.query( query, values );
@@ -80,6 +83,7 @@ export const getPropertyById = async (id: string ): Promise<Property | null> => 
             property_type as "propertyType",
             year_built as "yearBuilt",
             token_address as "tokenAddress",
+            price as "price",
             created_at as "createdAt",
             updated_at as "updatedAt"
         FROM properties
@@ -119,6 +123,7 @@ export const updateProperty = async (
             property_type as "propertyType",
             year_built as "yearBuilt",
             token_address as "tokenAddress",
+            price as "price",
             created_at as "createdAt",
             updated_at as "updatedAt"
     `;
@@ -154,6 +159,7 @@ export const getProperties = async (
             property_type as "propertyType",
             year_built as "yearBuilt",
             token_address as "tokenAddress",
+            price as "price",
             created_at as "createdAt",
             updated_at as "updatedAt"            
         FROM properties ${ queryClause }

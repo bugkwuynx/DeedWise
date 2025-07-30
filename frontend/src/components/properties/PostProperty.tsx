@@ -11,7 +11,7 @@ import {
 import { useState } from "react";
 import type { NewProperty } from "../../types/Properties";
 import states from "../../data/states.json";
-import PostPropertyButton from "../common/PostPropertyButton";
+import PostPropertyButton from "./PostPropertyButton";
 
 const PostProperty = () => {
   const [property, setProperty] = useState<NewProperty>({
