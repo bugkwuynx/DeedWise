@@ -1,7 +1,8 @@
-import { User } from "./Users";
+import type { User } from "./Users";
 
 export interface Property extends NewProperty {
     id: string;
+    tokenAddress: string;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -19,4 +20,9 @@ export interface NewProperty {
     propertyType: string;
     yearBuilt: number;
     price: number;
+}
+
+export interface DisplayProperty {
+    property: Property;
+    owner: User;
 }
