@@ -2,30 +2,15 @@ import type { Property } from "../../types/Properties";
 import { Box, Card, CardContent, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import PurchasePropertyButton from "./PurchasePropertyButton";
-import { Connection, PublicKey, SystemProgram } from "@solana/web3.js";
-import { Program, AnchorProvider } from "@project-serum/anchor";
-import idl from "../../../../smart-contract/target/idl/smart_contract.json";
-import { useWallet } from "@solana/wallet-adapter-react";
-import BN from "bn.js";
-import type { User } from "../../types/Users";
-import { ContractStatus } from "../../types/Contract";
+import type { DisplayProperty } from "../../types/Properties";
 
 interface DisplayPropertyProps {
   propertyId: Property["id"];
 }
 
-const programId = new PublicKey(idl.address);
-const network = "https://api.devnet.solana.com";
-
 const DisplayProperty = ({ propertyId }: DisplayPropertyProps) => {
 
-  const wallet = useWallet();
-  const [program, setProgram] = useState<Program | null>(null);
-  const [sellerAddress, setSellerAddress] = useState<PublicKey | null>(null);
-  const [propertyAddress, setPropertyAddress] = useState<PublicKey | null>(null);
-  const [propertyOwner, setPropertyOwner] = useState<User | null>(null);
-
-  const [property, setProperty] = useState<Property | null>(null);
+  const [property, setProperty] = useState<DisplayProperty | null>(null);
 
   const fetchData = async (propertyId: string) => {
     if (!propertyId) {
@@ -42,89 +27,13 @@ const DisplayProperty = ({ propertyId }: DisplayPropertyProps) => {
 
     if (getPropertyDisplayResult.ok) {
       const propertyDisplay = await getPropertyDisplayResult.json();
-      setProperty(propertyDisplay.property);
-      setPropertyOwner(propertyDisplay.owner);
-    }
-  };
-
-  const fetchPropertyAddress = async (propertyId: string) => {
-    if (!program || !sellerAddress) {
-      return;
-    }
-
-    const [propertyAddress] = PublicKey.findProgramAddressSync(
-      [
-        Buffer.from("property"),
-        sellerAddress.toBuffer(),
-        new BN(propertyId).toArrayLike(Buffer, "le", 8),
-      ],
-      program.programId
-    );
-
-    setPropertyAddress(propertyAddress);
-  }
-
-  const initializeContract = async () => {
-    if (!program || !sellerAddress) {
-      return;
-    }
-
-    const buyerPubkey = new PublicKey(wallet);
-    const sellerPubkey = sellerAddress;
-    const propertyPubkey = propertyAddress;
-
-    if (!buyerPubkey || !sellerPubkey || !propertyPubkey) {
-      alert("Error initializing contract");
-      return;
-    }
-
-    const [contractPDA, _bump] = await PublicKey.findProgramAddressSync(
-      [Buffer.from("contract"), buyerPubkey.toBuffer()],
-      program.programId
-    );
-
-    try {
-      await program.methods
-        .initializeContract(
-          buyerPubkey,
-          sellerPubkey,
-          propertyPubkey,
-          new BN(ContractStatus.WaitingForSeller)
-        )
-        .accounts({
-          buyer: buyerPubkey,
-          smartContract: contractPDA,
-          systemProgram: SystemProgram.programId,
-        })
-        .rpc();
-
-      alert("Contract initialized successfully");
-    } catch (error) {
-      console.error(error);
-      alert("Error initializing contract");
+      setProperty(propertyDisplay);
     }
   };
 
   useEffect(() => {
     fetchData(propertyId);
-
-    if (!wallet.connected) {
-      alert("Please connect your wallet");
-      return;
-    };
-    const connection = new Connection(network);
-    const provider = new AnchorProvider(connection, wallet, {});
-    const program = new Program(idl, programId, provider);
-    setProgram(program);
-    fetchPropertyAddress(propertyId);
-    if (propertyOwner?.walletAddress) {
-      const sellerPubKey = new PublicKey(propertyOwner.walletAddress);
-      setSellerAddress(sellerPubKey);
-    }
-    else {
-      alert("Property owner not found");
-    }
-  }, [propertyId, wallet]);
+  }, [propertyId]);
 
   if (!property) {
     return <div>Loading...</div>;
@@ -172,7 +81,7 @@ const DisplayProperty = ({ propertyId }: DisplayPropertyProps) => {
                     gap: 2,
                   }}
                 >
-                  <Typography variant="h6"><b>Price:</b> {property.price || "N/A"}</Typography>
+                  <Typography variant="h6"><b>Price:</b> {property.property.price || "N/A"}</Typography>
                   <Box
                     sx={{
                       display: "flex",
@@ -182,11 +91,11 @@ const DisplayProperty = ({ propertyId }: DisplayPropertyProps) => {
                       gap: 10,
                     }}
                   >
-                    <Typography variant="h6"><b>Beds:</b> {property.beds || "N/A"}</Typography>
-                    <Typography variant="h6"><b>Baths:</b> {property.baths || "N/A"}</Typography>
-                    <Typography variant="h6"><b>Sqft:</b> {property.sqft || "N/A"}</Typography>
+                    <Typography variant="h6"><b>Beds:</b> {property.property.beds || "N/A"}</Typography>
+                    <Typography variant="h6"><b>Baths:</b> {property.property.baths || "N/A"}</Typography>
+                    <Typography variant="h6"><b>Sqft:</b> {property.property.sqft || "N/A"}</Typography>
                   </Box>
-                  <Typography variant="h6"><b>Address:</b> {property.address || "N/A"}</Typography>
+                  <Typography variant="h6"><b>Address:</b> {property.property.address || "N/A"}</Typography>
                   <Box
                     sx={{
                       display: "flex",
@@ -196,9 +105,9 @@ const DisplayProperty = ({ propertyId }: DisplayPropertyProps) => {
                       gap: 10,
                     }}
                   >
-                    <Typography variant="h6"><b>City:</b> {property.city || "N/A"}</Typography>
-                    <Typography variant="h6"><b>State:</b> {property.state || "N/A"}</Typography>
-                    <Typography variant="h6"><b>Zip Code:</b> {property.zipCode || "N/A"}</Typography>
+                    <Typography variant="h6"><b>City:</b> {property.property.city || "N/A"}</Typography>
+                    <Typography variant="h6"><b>State:</b> {property.property.state || "N/A"}</Typography>
+                    <Typography variant="h6"><b>Zip Code:</b> {property.property.zipCode || "N/A"}</Typography>
                   </Box>
                   <Box
                     sx={{
@@ -209,10 +118,10 @@ const DisplayProperty = ({ propertyId }: DisplayPropertyProps) => {
                       gap: 10,
                     }}
                   >
-                    <Typography variant="h6"><b>Property Type:</b> {property.propertyType || "N/A"}</Typography>
-                    <Typography variant="h6"><b>Year Built:</b> {property.yearBuilt || "N/A"}</Typography>
+                    <Typography variant="h6"><b>Property Type:</b> {property.property.propertyType || "N/A"}</Typography>
+                    <Typography variant="h6"><b>Year Built:</b> {property.property.yearBuilt || "N/A"}</Typography>
                   </Box>
-                  <PurchasePropertyButton propertyId={propertyId} />
+                  <PurchasePropertyButton displayProperty={property} buyerId={property.owner.id} />
                 </Box>
             </CardContent>
         </Card>

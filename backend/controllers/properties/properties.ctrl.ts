@@ -12,9 +12,6 @@ import {
     getProperties,
     updateProperty
 } from "../../services/properties/properties.service";
-import { createAndMintToken } from "../createToken.ctrl";
-import { User } from "../../types/users.types";
-import { getUsers } from "../../services/users/users.service";
 
 export const createPropertyHandler = async (
     req: CreatePropertyRequest,

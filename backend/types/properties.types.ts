@@ -3,7 +3,7 @@ import { Request } from "express";
 
 export interface Property extends NewProperty {
     id: string;
-    tokenAddress: string | null;
+    tokenAddress: string;
     createdAt: Date;
     updatedAt: Date;
 }

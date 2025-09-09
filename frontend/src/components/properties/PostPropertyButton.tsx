@@ -14,11 +14,9 @@ import {
 } from "@metaplex-foundation/mpl-toolbox";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 import { generateSigner, percentAmount } from "@metaplex-foundation/umi";
-import { base58 } from "@metaplex-foundation/umi/serializers";
 import type { CreateTokenResponse } from "../../types/Token";
 import { walletAdapterIdentity } from "@metaplex-foundation/umi-signer-wallet-adapters";
 import type { WalletAdapter } from "@solana/wallet-adapter-base";
-import { Keypair, type Signer, Transaction } from "@solana/web3.js";
 
 
 export const PostPropertyButton = (property: NewProperty) => {
@@ -197,6 +195,23 @@ export const PostPropertyButton = (property: NewProperty) => {
           console.log(
             `View on Solana Explorer: https://explorer.solana.com/address/${tokenResponse.mintAddress}?cluster=devnet`
           );
+          const updatePropertyTokenAddress = await fetch(
+            `${import.meta.env.VITE_API_URL}/properties/${property.id}`,
+            {
+              method: "PATCH",
+              body: JSON.stringify({ tokenAddress: tokenResponse.mintAddress }),
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
+
+          if (updatePropertyTokenAddress.ok) {
+            alert("Property token address updated successfully");
+          } else {
+            alert("Failed to update property token address");
+          }
         } else {
           throw new Error(tokenResponse.message);
         }

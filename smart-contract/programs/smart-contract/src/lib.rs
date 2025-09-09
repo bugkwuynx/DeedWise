@@ -2,8 +2,7 @@ use anchor_lang::prelude::*;
 use anchor_lang::{AnchorDeserialize, AnchorSerialize};
 use anchor_lang::solana_program::system_instruction;
 use anchor_lang::solana_program::program::invoke_signed;
-
-// Data structs
+use anchor_spl::token::{Mint, TokenAccount};
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, PartialEq, Debug)]
 pub enum ContractStatus {
@@ -14,16 +13,13 @@ pub enum ContractStatus {
 #[account]
 pub struct PropertySaleContract {
     pub is_initialized: bool,
+    /// CHECK: This is the buyer's public key, no additional checks needed
     pub buyer: Pubkey,
+    /// CHECK: This is the seller's public key, no additional checks needed
     pub seller: Pubkey,
-    pub property: Pubkey,
+    /// CHECK: This is the property token mint address, no additional checks needed
+    pub propertyToken: Pubkey,
     pub status: ContractStatus,
-}
-
-#[account]
-pub struct Property {
-    pub owner: Pubkey,
-    pub property_id: u64,
 }
 
 declare_id!("CQDZhV4b33qg38Qxm3vYeQZY5QuLbmNbAF4z25T7iveN");
@@ -34,18 +30,13 @@ pub mod smart_contract {
 
     pub fn initialize_contract(
         ctx: Context<InitializeContract>,
-        buyer: Pubkey,
-        seller: Pubkey,
-        property: Pubkey,
-        offer: Pubkey,
     ) -> Result<()> {
         msg!("Initializing contract");
         let contract = &mut ctx.accounts.smart_contract;
         contract.is_initialized = true;
-        contract.buyer = buyer;
-        contract.seller = seller;
-        contract.property = property;
-        contract.offer = offer;
+        contract.buyer = *ctx.accounts.buyer.key;
+        contract.seller = *ctx.accounts.seller.key;
+        contract.propertyToken = *ctx.accounts.propertyToken.key;
         contract.status = ContractStatus::WaitingForSeller;
 
         msg!("Contract initialized by buyer");
@@ -66,14 +57,6 @@ pub mod smart_contract {
             msg!("Contract already executed");
             return err!(ErrorCode::ContractAlreadyExecuted);
         }
-        if contract.seller != ctx.accounts.seller.key() {
-            msg!("Signer is not the seller");
-            return err!(ErrorCode::InvalidSeller);
-        }
-        if contract.property != ctx.accounts.property.key() {
-            msg!("Property account does not match contract");
-            return err!(ErrorCode::InvalidProperty);
-        }
 
         // Update contract status
         contract.status = ContractStatus::Executed;
@@ -88,12 +71,20 @@ pub struct InitializeContract<'info> {
     #[account(mut)]
     pub buyer: Signer<'info>,
 
+    #[account(mut)]
+    /// CHECK: Seller does not sign at initialization; verified later
+    pub seller: AccountInfo<'info>,
+
+    #[account(mut)]
+    /// CHECK: This is the property token mint address, no additional checks needed
+    pub propertyToken: AccountInfo<'info>,
+
     #[account(
         init,
+        seeds = [b"smart_contract"],
+        bump,
         payer = buyer,
-        space = 8 + 1 + 32 + 32 + 32 + 32 + 1,
-        seeds = [b"contract", buyer.key().as_ref()],
-        bump
+        space = 8 + 1 + 32 + 32 + 32 + 1
     )]
     pub smart_contract: Account<'info, PropertySaleContract>,
 
@@ -102,27 +93,24 @@ pub struct InitializeContract<'info> {
 
 #[derive(Accounts)]
 pub struct SellerSignAndExecute<'info> {
-    #[account(
-        mut,
-        seeds = [b"contract", smart_contract.buyer.key().as_ref()],
-        bump,
-        constraint = smart_contract.status == ContractStatus::WaitingForSeller
-    )]
-    pub smart_contract: Account<'info, PropertySaleContract>,
-
-    #[account(
-        mut,
-        seeds = [
-            b"property",
-            smart_contract.seller.key().as_ref(),
-            property_id.to_le_bytes().as_ref(),
-        ],
-        bump = smart_contract.bump,
-    )]
-    pub property: Account<'info, Property>,
-
     #[account(mut)]
     pub seller: Signer<'info>,
+
+    #[account(mut)]
+    /// CHECK: This is the buyer's account info, no additional checks needed
+    pub buyer: AccountInfo<'info>,
+
+    #[account(mut)]
+    /// CHECK: This is the property token mint address, no additional checks needed
+    pub propertyToken: AccountInfo<'info>,
+
+    #[account(
+        mut,
+        constraint = smart_contract.seller == seller.key(),
+        constraint = smart_contract.buyer == buyer.key(),
+        constraint = smart_contract.propertyToken == propertyToken.key()
+    )]
+    pub smart_contract: Account<'info, PropertySaleContract>,
 
     pub system_program: Program<'info, System>,
 }
